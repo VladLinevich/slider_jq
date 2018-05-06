@@ -15,34 +15,30 @@
         
         item: $('<span>', {
             class:'s-pagination__item'
-        })
-     }
-
-     var methods = {
-
+        }),
         
-
+        element: null
      }
 
      var params = {
-        widthOfWrapper: Number.parseInt(elements.items.css('width')),
-        heightOfWrapper: Number.parseInt(elements.container.css('height'))
+        widthOfWrapper: getSizeParam(elements.items, 'width'),
+        heightOfWrapper: getSizeParam(elements.container, 'height')
      }
 
      var current = 0;
 
-     function slide (numberOfslide, cb) {
-
-        console.log(numberOfslide)
-
-        $('.s-container').css({
-            transform: 'translateX(-' + params.widthOfWrapper * numberOfslide + 'px)'
-        })
-
-        !cb ? false : cb();
-
+     function getSizeParam(elem, param) {
+        return Number.parseInt(elem.css(param))
      }
 
+     function activePaginationItem (current) {
+
+        var pagination = $('.s-pagination__item')
+
+        pagination.removeClass('active');
+        $(pagination[current]).addClass('active')
+     }
+     
      function changeCurrent (newCurrent , cb) {
          
         if(current === newCurrent || (current  === 0 && newCurrent < 0) || (current  === elements.countOfItems - 1 && newCurrent === elements.countOfItems)) {
@@ -51,6 +47,22 @@
             current = newCurrent
             slide(newCurrent , cb);
         }
+     }
+
+     function slide (numberOfslide, cb) {
+
+        var width = getSizeParam(elements.container, 'width')
+
+        console.log(numberOfslide)
+
+        $('.s-container').css({
+            transform: 'translateX(-' + width * numberOfslide + 'px)'
+        })
+
+        activePaginationItem (current);
+
+        !cb ? false : cb();
+
      }
 
      function createPagination () {
@@ -62,7 +74,11 @@
 
         pagination.wrap.appendTo(elements.container)
 
-        $('.s-pagination__item').on('click', function(event){
+        pagination.element = $('.s-pagination__item');
+
+        pagination.element.first().addClass('active')
+
+        pagination.element.on('click', function(event){
             changeCurrent($(this).index());
         })
      }
@@ -106,12 +122,28 @@
         $('.s-container').width(elements.countOfItems * params.widthOfWrapper);
         createBtn();
         createPagination();
+        changeSize();
+     }
 
-    }
+     function changeSize () {
+
+        $(window).resize(function(){
+
+            var width = getSizeParam(elements.container, 'width') + 'px';
+            
+            elements.items.each(function(i, el){
+                $(el).css({
+                    width: width, 
+                })
+            })
+
+            $('.s-container').width(elements.countOfItems * parseInt(width));
+           
+        })
+        
+     }
    
      init();
-
-     console.log(elements.items)
 
     };
   })( jQuery );
