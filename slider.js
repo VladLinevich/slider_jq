@@ -49,6 +49,26 @@
         }
      }
 
+     function changeSize () {
+
+        $(window).resize(function(){
+
+            var width = getSizeParam(elements.container, 'width') + 'px';
+            
+            elements.items.each(function(i, el){
+                $(el).css({
+                    width: width, 
+                })
+            })
+
+            $('.s-container').width(elements.countOfItems * parseInt(width));
+           
+            slide(current)    
+
+        })
+        
+     }
+
      function slide (numberOfslide, cb) {
 
         var width = getSizeParam(elements.container, 'width')
@@ -125,25 +145,7 @@
         changeSize();
      }
 
-     function changeSize () {
-
-        $(window).resize(function(){
-
-            var width = getSizeParam(elements.container, 'width') + 'px';
-            
-            elements.items.each(function(i, el){
-                $(el).css({
-                    width: width, 
-                })
-            })
-
-            $('.s-container').width(elements.countOfItems * parseInt(width));
-           
-            slide(current)    
-
-        })
-        
-     }
+     
    
      init();
 
