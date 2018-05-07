@@ -139,6 +139,8 @@
 
             $('.s-container').width(elements.countOfItems * parseInt(width));
            
+            slide(current)    
+
         })
         
      }
